@@ -1,16 +1,26 @@
+// Event listener for keyup event on the search input field
 document.getElementById('search-input').addEventListener('keyup', async (e) => {
-    // Search comments
-    // Use this API: https://jsonplaceholder.typicode.com/comments?postId=3
-    // Display the results in the UI
+    // Get the value entered by the user
+    const inputValue = e.target.value;
 
-    // Things to look out for
-    // ---
-    // Use es6
+    // If the input value is empty or contains only whitespace characters, clear the search results and exit
+    if (!inputValue.trim()) {
+        document.getElementById('results').innerHTML = '';
+        return;
+    }
 
-    const res = await fetch('http://localhost:8000/')
-    const json = await res.json()
+    try {
+        // Fetch data from the PHP endpoint
+        const res = await fetch('http://localhost:8000/');
+        const data = await res.json();
 
-    const result = `<li>${json.join('</li><li>')}</li>`
-    document.getElementById('results').innerHTML = result
+        // Filter the data based on the input value and convert it to html list items
+        const filteredResults = data.filter(comment => comment.name.includes(inputValue));
+        const result = filteredResults.map(comment => `<li>${comment.name}</li>`).join('');
 
-})
+        // Append results to the ui
+        document.getElementById('results').innerHTML = result;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+});
