@@ -16,7 +16,14 @@ document.getElementById('search-input').addEventListener('keyup', async (e) => {
 
         // Filter the data based on the input value and convert it to html list items
         const filteredResults = data.filter(comment => comment.name.includes(inputValue));
-        const result = filteredResults.map(comment => `<li>${comment.name}</li>`).join('');
+        const result = filteredResults.map(comment => `
+            <div class="comment">
+                <h3><strong>Name: </strong>${comment.name}</h3>
+                <p><strong>Email:</strong> ${comment.email}</p>
+                <p><strong>Comment:</strong> ${comment.body}</p>
+                <hr/>
+            </div>
+        `).join('');
 
         // Append results to the ui
         document.getElementById('results').innerHTML = result;
